@@ -1,0 +1,13 @@
+# Setting port and baudrate base on your device
+port         : "/dev/ttyACM0"
+baudrate     : 115200
+
+# This will cause the node to convert any NED measurements to ENU
+# This will also cause the node to convert any vehicle frame measurements to the ROS definition of a vehicle frame
+use_enu_frame : True
+
+# The frame where imu/data will be published 
+frame_id: "imu_link"
+
+# Do not enable this, you should define the transform by urdf or tf package, etc.
+publish_mount_to_frame_id_transform  : False 

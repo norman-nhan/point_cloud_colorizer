@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- Launch Velodyne node -->
+    <!-- Use the same file velodyne provided w no changes -->
+    <include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch"/> 
+
+    <!-- Launch IMU node -->
+    <include file="$(find microstrain_inertial_driver)/launch/microstrain.launch">
+        <!-- ??? I want to leave this mark, why param and rosparam tag not working, but arg work in this case? -->
+        <arg name="params_file" value="$(find point_cloud_colorizer)/io/config/imu_params.yml"/>
+    </include>
+
+    <!-- Launch Webcam node -->
+    <include file="$(find point_cloud_colorizer)/launch/webcam_node.launch"/>
+
+    <!-- Launch Point Cloud Colorizer Node -->
+    <node name="point_cloud_colorizer_node" pkg="point_cloud_colorizer" type="point_cloud_colorizer_node" output="screen">
+        <!-- ??? In this case only rosparam works -->
+        <rosparam file="$(find point_cloud_colorizer)/io/config/point_cloud_colorizer_params.yml"/>
+    </node>
+
+    <!-- Fast-lio2 node -->
+    <!-- Use modified mapping_velodyne file in point_cloud_colorizer package -->
+    <include file="$(find point_cloud_colorizer)/launch/fast_lio.launch" />
+</launch>

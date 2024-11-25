@@ -1,0 +1,15 @@
+# input topics
+img_topic: usb_cam/image_raw
+pc_topic: velodyne_points
+# output topics
+color_cloud_topic: color_cloud
+# position of camera relative to the lidar frame
+offset_x: 0.0
+offset_y: 0.0
+offset_z: 0.0
+# camera fov 
+vFOV: 0.516
+hFOV: 0.734
+# image bounds
+image_width: 640
+image_height: 480
