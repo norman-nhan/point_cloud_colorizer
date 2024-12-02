@@ -5,7 +5,7 @@ pc_topic: velodyne_points
 color_cloud_topic: color_cloud
 # position of camera relative to the lidar frame
 offset_x: 0.0
-offset_y: 0.0
+offset_y: 0.09
 offset_z: 0.0
 # camera fov 
 vFOV: 0.516
