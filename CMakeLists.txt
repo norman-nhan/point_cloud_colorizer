@@ -8,6 +8,7 @@ find_package(catkin REQUIRED COMPONENTS
   message_filters
   cv_bridge
   pcl_ros
+  image_transport
 )
 
 find_package(OpenCV REQUIRED)

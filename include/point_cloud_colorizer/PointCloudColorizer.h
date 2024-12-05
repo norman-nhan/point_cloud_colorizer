@@ -6,6 +6,7 @@
 #include <message_filters/subscriber.h>
 #include <message_filters/synchronizer.h>
 #include <message_filters/sync_policies/approximate_time.h>
+#include <image_transport/image_transport.h>
 // OpenCV
 #include <cv_bridge/cv_bridge.h>
 #include <opencv2/opencv.hpp>
@@ -18,7 +19,7 @@
 // C++ system
 #include <stdio.h>
 #include <cmath>
-
+// custom pcl point type
 #include "color_cloud.h"
 
 ////////////////////////////
@@ -66,6 +67,9 @@ private:
     typedef message_filters::sync_policies::ApproximateTime<sensor_msgs::Image, sensor_msgs::PointCloud2> MySyncPolicy;
     typedef message_filters::Synchronizer<MySyncPolicy> Sync;
     boost::shared_ptr<Sync> sync_;
+    image_transport::ImageTransport it_;
+    image_transport::Publisher img_pub_;
+    sensor_msgs::PointCloud2 cloud_out_;
 
     // Parameters
     std::string img_topic_;
@@ -84,7 +88,9 @@ private:
     pcl::PointCloud<PointType> pl_color_;
 
     // OpenCV
-    cv::Mat current_image_;
+    // cv::Mat current_img_;
+    cv::Mat img_out_;
+    cv_bridge::CvImage cv_img_;
 
 public:
     PointCloudColorizer(ros::NodeHandle& nh);
@@ -92,7 +98,8 @@ public:
 
 private:
     void synchronizer(const sensor_msgs::Image::ConstPtr& img_msg, const sensor_msgs::PointCloud2::ConstPtr& pc_msg);
-    void img_cbk(const sensor_msgs::Image::ConstPtr& msg); 
-    void pc_cbk(const sensor_msgs::PointCloud2::ConstPtr& msg);
+    // void img_cbk(const sensor_msgs::Image::ConstPtr& msg); 
+    // void pc_cbk(const sensor_msgs::PointCloud2::ConstPtr& msg);
+    void colorize(const sensor_msgs::PointCloud2::ConstPtr& msg, const cv::Mat input_img);
 };
 } // end namespace point_cloud_colorizer
