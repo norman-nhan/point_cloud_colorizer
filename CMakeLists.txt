@@ -9,9 +9,15 @@ find_package(catkin REQUIRED COMPONENTS
   cv_bridge
   pcl_ros
   image_transport
+  dynamic_reconfigure
 )
 
 find_package(OpenCV REQUIRED)
+
+generate_dynamic_reconfigure_options(
+  io/config/CameraParamSlider.cfg
+)
+
 
 ## Declare a catkin package
 catkin_package(

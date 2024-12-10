@@ -21,6 +21,9 @@
 #include <cmath>
 // custom pcl point type
 #include "color_cloud.h"
+// dynamic reconfigure
+#include <dynamic_reconfigure/server.h>
+#include "point_cloud_colorizer/CameraParamSliderConfig.h"
 
 ////////////////////////////
 // Declare new pcl PointT //
@@ -88,9 +91,12 @@ private:
     pcl::PointCloud<PointType> pl_color_;
 
     // OpenCV
-    // cv::Mat current_img_;
-    cv::Mat img_out_;
     cv_bridge::CvImage cv_img_;
+
+    // Dynamic recongigure
+    dynamic_reconfigure::Server<CameraParamSliderConfig> dr_server_;
+    dynamic_reconfigure::Server<CameraParamSliderConfig>::CallbackType dr_callback_;
+
 
 public:
     PointCloudColorizer(ros::NodeHandle& nh);
@@ -98,8 +104,7 @@ public:
 
 private:
     void synchronizer(const sensor_msgs::Image::ConstPtr& img_msg, const sensor_msgs::PointCloud2::ConstPtr& pc_msg);
-    // void img_cbk(const sensor_msgs::Image::ConstPtr& msg); 
-    // void pc_cbk(const sensor_msgs::PointCloud2::ConstPtr& msg);
     void colorize(const sensor_msgs::PointCloud2::ConstPtr& msg, const cv::Mat input_img);
+    void dr_cbk(CameraParamSliderConfig &config, uint32_t level);
 };
 } // end namespace point_cloud_colorizer

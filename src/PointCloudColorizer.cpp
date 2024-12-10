@@ -33,95 +33,17 @@ PointCloudColorizer::PointCloudColorizer(ros::NodeHandle& nh) : nh_(nh), it_(nh_
     // cvbridge
     cv_img_.header.frame_id = "camera";
     cv_img_.encoding = "bgr8";
+
+    // dynamic reconfig
+    dr_callback_ = boost::bind(&PointCloudColorizer::dr_cbk, this, _1, _2);
+    dr_server_.setCallback(dr_callback_);
+
 }
 
 PointCloudColorizer::~PointCloudColorizer() // Default Destructor
 {
 
 }
-
-// void PointCloudColorizer::img_cbk(const sensor_msgs::Image::ConstPtr& msg) {
-//     // Convert ROS image msg to opencv 
-//     try {
-//         cv_bridge::CvImagePtr cv_ptr = cv_bridge::toCvCopy(msg, "bgr8");
-//         current_img_ = cv_ptr->image;
-//     }
-//     catch (cv_bridge::Exception& e) {
-//         ROS_ERROR("cv_bridge exception: %s", e.what());
-//     }
-// }
-
-// void PointCloudColorizer::pc_cbk(const sensor_msgs::PointCloud2::ConstPtr& msg) {
-//     // Convert Velodyne ROS msg to pcl PointT
-//     pcl::PointCloud<velodyne_ros::Point> pl_orig;
-//     pcl::fromROSMsg(*msg, pl_orig);
-//     pl_color_.points.resize(pl_orig.points.size());
-//     // Iterating
-//     for (size_t i = 0; i < pl_orig.points.size(); ++i) {
-//         // copy data from INPUT CLOUD:"pl_orig" to OUTPUT CLOUD: "pl_color"
-//         pl_color_.points[i].x = pl_orig.points[i].x;
-//         pl_color_.points[i].y = pl_orig.points[i].y;
-//         pl_color_.points[i].z = pl_orig.points[i].z;
-//         pl_color_.points[i].intensity = pl_orig.points[i].intensity;    // reflection intensity
-//         pl_color_.points[i].ring = pl_orig.points[i].ring;  // ring number (VLP16 has ring number up to 16)
-//         pl_color_.points[i].time = pl_orig.points[i].time;  // time laser beam was shot
-        
-//         /* 
-//         converts points from LiDAR coordinates to camera coordinates
-//         the offset_x_y_z are the position of camera refers to LiDAR origin
-//         */
-//         float xC = pl_color_.points[i].x - offset_x_;
-//         float yC = pl_color_.points[i].y - offset_y_;
-//         float zC = pl_color_.points[i].z - offset_z_;
-//         // Calculate angles
-//         float vA = static_cast<float>(atan2(zC, sqrt(xC*xC + yC*yC)));  // vertical angle
-//         float hA = static_cast<float>(atan2(yC, xC));                   // horizontal angle
-//         // If point in camera fov, calculates position of point in image coordinates
-//         if (vA >= -vFOV_/2 && vA <= vFOV_/2 && hA >= -hFOV_/2 && hA <= hFOV_/2 && xC >= 0) {
-//             int xI = static_cast<int>((img_w_/2) * (1 - hA/(hFOV_/2)));
-//             int yI = static_cast<int>((img_h_/2) * (1 - vA/(vFOV_/2)));
-//             // if point exists in image bounds
-//             if (yI >=0 && yI < img_h_ && xI >= 0 && xI < img_w_) {
-//                 if (current_img_.empty()) {
-//                     ROS_WARN("Current image is empty; skipping colorization.");
-//                     return;
-//                 }
-//                 // Get color
-//                 cv::Vec3b color = current_img_.at<cv::Vec3b>(yI, xI);
-//                 pl_color_.points[i].r = color[2];
-//                 pl_color_.points[i].g = color[1];
-//                 pl_color_.points[i].b = color[0];
-//                 pl_color_.points[i].a = 255;
-
-//                 // mark red at these pixel
-//                 img_out_ = current_img_.clone();
-//                 img_out_.at<cv::Vec3b>(yI, xI) = cv::Vec3b(0, 0, 255); //red, bgr8 encoding;
-//             }
-//         }
-//         // Out of view
-//         else {
-//             pl_color_.points[i].r = 0;
-//             pl_color_.points[i].g = 0;
-//             pl_color_.points[i].b = 0;
-//             pl_color_.points[i].a = 0;
-//         }
-//     }
-//     // Convert pcl to ros msg
-//     pcl::toROSMsg(pl_color_, cloud_out_);
-    
-//     // Publish color cloud
-//     cloud_out_.header.frame_id = "velodyne";
-//     cloud_out_.header.stamp = ros::Time::now();
-//     cloud_out_.is_bigendian = msg->is_bigendian;
-//     cloud_out_.is_dense = msg->is_dense;
-//     color_cloud_pub_.publish(cloud_out_);
-    
-//     // publish img
-//     cv_img_.header.stamp = ros::Time::now();
-//     // cv_img_.image = current_img_;
-//     cv_img_.image = img_out_;
-//     img_pub_.publish(cv_img_.toImageMsg());
-// }
 
 void PointCloudColorizer::colorize(const sensor_msgs::PointCloud2::ConstPtr& msg, const cv::Mat input_img) {
     // Convert Velodyne ROS msg to pcl PointT
@@ -130,7 +52,7 @@ void PointCloudColorizer::colorize(const sensor_msgs::PointCloud2::ConstPtr& msg
     pl_color_.points.resize(pl_orig.points.size());
 
     // copy image to img_out
-    img_out_ = input_img.clone();
+    cv::Mat img_out = input_img.clone();
 
     // Iterating
     for (size_t i = 0; i < pl_orig.points.size(); ++i) {
@@ -169,8 +91,8 @@ void PointCloudColorizer::colorize(const sensor_msgs::PointCloud2::ConstPtr& msg
                 pl_color_.points[i].b = color[0];
                 pl_color_.points[i].a = 255;
 
-                // mark red at these pixel
-                img_out_.at<cv::Vec3b>(yI, xI) = cv::Vec3b(0, 0, 255); //red, bgr8 encoding;
+                // change pixels correspond with point cloud into red
+                img_out.at<cv::Vec3b>(yI, xI) = cv::Vec3b(0, 0, 255); //red, bgr8 encoding;
             }
         }
         // Out of view
@@ -193,14 +115,12 @@ void PointCloudColorizer::colorize(const sensor_msgs::PointCloud2::ConstPtr& msg
     
     // publish img
     cv_img_.header.stamp = ros::Time::now();
-    cv_img_.image = img_out_;
+    cv_img_.image = img_out;
     // cv_img_.image = input_img;
     img_pub_.publish(cv_img_.toImageMsg());
 }
 
 void PointCloudColorizer::synchronizer(const sensor_msgs::Image::ConstPtr& img_msg, const sensor_msgs::PointCloud2::ConstPtr& pc_msg) {
-    // img_cbk(img_msg);
-    // pc_cbk(pc_msg);
     // Convert ROS image msg to opencv 
     try {
         cv_bridge::CvImagePtr cv_ptr = cv_bridge::toCvCopy(img_msg, "bgr8");
@@ -209,6 +129,15 @@ void PointCloudColorizer::synchronizer(const sensor_msgs::Image::ConstPtr& img_m
     catch (cv_bridge::Exception& e) {
         ROS_ERROR("cv_bridge exception: %s", e.what());
     }
+}
+
+void PointCloudColorizer::dr_cbk(CameraParamSliderConfig &config, uint32_t level) {
+    offset_x_ = config.offset_x;
+    offset_y_ = config.offset_y;
+    offset_z_ = config.offset_z;
+    vFOV_ = config.vFOV;
+    hFOV_ = config.hFOV;
+    ROS_INFO("Dynamic Reconfigure: Updated offsets (x: %.2f, y: %.2f, z: %.2f)", offset_x_, offset_y_, offset_z_);
 }
 
 } // end namespace point_cloud_colorizer
