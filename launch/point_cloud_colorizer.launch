@@ -14,8 +14,7 @@
     <include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch" />
     
     <!-- Rviz -->
-    <!-- <node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(find point_cloud_colorizer)/io/rviz/point_cloud_colorizer.rviz"/> -->
     <!-- <node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(find point_cloud_colorizer)/io/rviz/camera_calibration.rviz"/> -->
-    <node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(rviz_file)"/>
+    <node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(arg rviz_file)"/>
 
 </launch>
