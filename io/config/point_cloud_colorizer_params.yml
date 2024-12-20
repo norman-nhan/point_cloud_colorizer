@@ -8,8 +8,8 @@ offset_x: 0.01
 offset_y: 0.01
 offset_z: 0.01
 # camera fov 
-vFOV: 0.516
-hFOV: 0.734
+vFOV: 0.6666 # prev: 0.516
+hFOV: 0.8642 # prev: 0.734
 # image bounds
 image_width: 640
 image_height: 480
