@@ -2,16 +2,16 @@
 <launch>
     <arg name="rviz_file" default="$(find point_cloud_colorizer)/io/rviz/default.rviz"/>
 
+    <!-- camera -->
+    <include file="$(find point_cloud_colorizer)/launch/webcam_node.launch"/>
+
+    <!-- velodyne -->
+    <include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch" />
+    
     <!-- point cloud colorizer -->
     <node name="point_cloud_colorizer_node" pkg="point_cloud_colorizer" type="point_cloud_colorizer_node" output="screen">
         <rosparam file="$(find point_cloud_colorizer)/io/config/point_cloud_colorizer_params.yml"/>
     </node>
-
-    <!-- camera -->
-    <include file="$(find point_cloud_colorizer)/launch/webcam_node.launch"/>
-    
-    <!-- velodyne -->
-    <include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch" />
     
     <!-- Rviz -->
     <!-- <node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(find point_cloud_colorizer)/io/rviz/camera_calibration.rviz"/> -->
