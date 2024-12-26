@@ -4,11 +4,11 @@ namespace point_cloud_colorizer {
 
 PointCloudColorizer::PointCloudColorizer(ros::NodeHandle& nh) : nh_(nh), it_(nh_)
 {
-    // Load parameters
+    // Load parameters from yaml file, the default values in below codes will be over-write by yaml file
     ros::NodeHandle private_nh("~"); 
-    private_nh.param<std::string>("img_topic", img_topic_, "/usb_cam/image_raw");
-    private_nh.param<std::string>("pc_topic", pc_topic_, "/velodyne_points");
-    private_nh.param<std::string>("color_cloud_topic", color_cloud_topic_, "/color_cloud");
+    private_nh.param<std::string>("img_topic", img_topic_, "");
+    private_nh.param<std::string>("pc_topic", pc_topic_, "");
+    private_nh.param<std::string>("color_cloud_topic", color_cloud_topic_, "");
     private_nh.param<float>("offset_x", offset_x_, 0.0);
     private_nh.param<float>("offset_y", offset_y_, 0.0);
     private_nh.param<float>("offset_z", offset_z_, 0.0);
@@ -45,6 +45,7 @@ PointCloudColorizer::~PointCloudColorizer() // Default Destructor
 
 }
 
+// Colorize point cloud
 void PointCloudColorizer::colorize(const sensor_msgs::PointCloud2::ConstPtr& msg, const cv::Mat input_img) {
     // Convert Velodyne ROS msg to pcl PointT
     pcl::PointCloud<velodyne_ros::Point> pl_orig;
@@ -116,7 +117,6 @@ void PointCloudColorizer::colorize(const sensor_msgs::PointCloud2::ConstPtr& msg
     // publish img
     cv_img_.header.stamp = ros::Time::now();
     cv_img_.image = img_out;
-    // cv_img_.image = input_img;
     img_pub_.publish(cv_img_.toImageMsg());
 }
 
