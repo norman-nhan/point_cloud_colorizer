@@ -1,2 +1,2 @@
 # point_cloud_colorizer
-A pkg to colorize point cloud data with a camera and LiDAR
+A package to colorize point cloud data by fusing camera and LiDAR data.

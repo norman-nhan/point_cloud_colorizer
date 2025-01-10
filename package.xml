@@ -16,7 +16,7 @@
   <depend>cv_bridge</depend>
   <depend>pcl_ros</depend>
   <depend>image_transport</depend>
-  <depend>dynamic_reconfigure</depend>
+  <!-- <depend>dynamic_reconfigure</depend> -->
 
   <export>
   </export>

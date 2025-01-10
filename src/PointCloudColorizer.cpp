@@ -35,8 +35,8 @@ PointCloudColorizer::PointCloudColorizer(ros::NodeHandle& nh) : nh_(nh), it_(nh_
     cv_img_.encoding = "bgr8";
 
     // dynamic reconfig
-    dr_callback_ = boost::bind(&PointCloudColorizer::dr_cbk, this, _1, _2);
-    dr_server_.setCallback(dr_callback_);
+    // dr_callback_ = boost::bind(&PointCloudColorizer::dr_cbk, this, _1, _2);
+    // dr_server_.setCallback(dr_callback_);
 
 }
 
@@ -131,13 +131,16 @@ void PointCloudColorizer::synchronizer(const sensor_msgs::Image::ConstPtr& img_m
     }
 }
 
-void PointCloudColorizer::dr_cbk(CameraParamSliderConfig &config, uint32_t level) {
-    offset_x_ = config.offset_x;
-    offset_y_ = config.offset_y;
-    offset_z_ = config.offset_z;
-    vFOV_ = config.vFOV;
-    hFOV_ = config.hFOV;
-    ROS_INFO("Dynamic Reconfigure: Updated offsets (x: %.2f, y: %.2f, z: %.2f)", offset_x_, offset_y_, offset_z_);
-}
+// This function is only for configure camera's parameters at the early state, 
+// now I have found the best fit parameters so I don't need this function at all
+//
+// void PointCloudColorizer::dr_cbk(CameraParamSliderConfig &config, uint32_t level) {
+//     offset_x_ = config.offset_x;
+//     offset_y_ = config.offset_y;
+//     offset_z_ = config.offset_z;
+//     vFOV_ = config.vFOV;
+//     hFOV_ = config.hFOV;
+//     ROS_INFO("Dynamic Reconfigure: Updated offsets (x: %.2f, y: %.2f, z: %.2f)", offset_x_, offset_y_, offset_z_);
+// }
 
 } // end namespace point_cloud_colorizer
