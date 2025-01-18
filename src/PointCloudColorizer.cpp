@@ -4,7 +4,7 @@ namespace point_cloud_colorizer {
 
 PointCloudColorizer::PointCloudColorizer(ros::NodeHandle& nh) : nh_(nh), it_(nh_)
 {
-    // Load parameters from yaml file, the default values in below codes will be over-write by yaml file
+    // Load parameters from a yaml file, the default values in below codes will be overwrited by that yaml file
     ros::NodeHandle private_nh("~"); 
     private_nh.param<std::string>("img_topic", img_topic_, "");
     private_nh.param<std::string>("pc_topic", pc_topic_, "");
@@ -12,8 +12,8 @@ PointCloudColorizer::PointCloudColorizer(ros::NodeHandle& nh) : nh_(nh), it_(nh_
     private_nh.param<float>("offset_x", offset_x_, 0.0);
     private_nh.param<float>("offset_y", offset_y_, 0.0);
     private_nh.param<float>("offset_z", offset_z_, 0.0);
-    private_nh.param<float>("vFOV", vFOV_, 0.516);
-    private_nh.param<float>("hFOV", hFOV_, 0.734);
+    private_nh.param<float>("vFOV", vFOV_, 0.611);  // prev_value: 0.516
+    private_nh.param<float>("hFOV", hFOV_, 0.796);  // prev_value: 0.734
     private_nh.param<int>("image_width", img_w_, 640);
     private_nh.param<int>("image_height", img_h_, 480);
 
@@ -27,16 +27,16 @@ PointCloudColorizer::PointCloudColorizer(ros::NodeHandle& nh) : nh_(nh), it_(nh_
 
     // Publishers
     color_cloud_pub_ = nh_.advertise<sensor_msgs::PointCloud2>(color_cloud_topic_, 1);  // output_cloud
-    // publishes image which contains lidar scans
+    // Publisher for image contains lidar scan
     img_pub_ = it_.advertise("img_w_lidar_scan", 1);
     
-    // cvbridge
+    // cvbridge initialization
     cv_img_.header.frame_id = "camera";
     cv_img_.encoding = "bgr8";
 
     // dynamic reconfig
-    // dr_callback_ = boost::bind(&PointCloudColorizer::dr_cbk, this, _1, _2);
-    // dr_server_.setCallback(dr_callback_);
+    dr_callback_ = boost::bind(&PointCloudColorizer::dr_cbk, this, _1, _2);
+    dr_server_.setCallback(dr_callback_);
 
 }
 
@@ -67,7 +67,7 @@ void PointCloudColorizer::colorize(const sensor_msgs::PointCloud2::ConstPtr& msg
         
         /* 
         converts points from LiDAR coordinates to camera coordinates
-        the offset_x_y_z are the position of camera refers to LiDAR origin
+        the offsets are the pose of camera refers to LiDAR in each x,y,z axises
         */
         float xC = pl_color_.points[i].x - offset_x_;
         float yC = pl_color_.points[i].y - offset_y_;
@@ -134,13 +134,13 @@ void PointCloudColorizer::synchronizer(const sensor_msgs::Image::ConstPtr& img_m
 // This function is only for configure camera's parameters at the early state, 
 // now I have found the best fit parameters so I don't need this function at all
 //
-// void PointCloudColorizer::dr_cbk(CameraParamSliderConfig &config, uint32_t level) {
-//     offset_x_ = config.offset_x;
-//     offset_y_ = config.offset_y;
-//     offset_z_ = config.offset_z;
-//     vFOV_ = config.vFOV;
-//     hFOV_ = config.hFOV;
-//     ROS_INFO("Dynamic Reconfigure: Updated offsets (x: %.2f, y: %.2f, z: %.2f)", offset_x_, offset_y_, offset_z_);
-// }
+void PointCloudColorizer::dr_cbk(CameraParamSliderConfig &config, uint32_t level) {
+    offset_x_ = config.offset_x;
+    offset_y_ = config.offset_y;
+    offset_z_ = config.offset_z;
+    vFOV_ = config.vFOV;
+    hFOV_ = config.hFOV;
+    ROS_INFO("Dynamic Reconfigure: Updated offsets (x: %.2f, y: %.2f, z: %.2f)", offset_x_, offset_y_, offset_z_);
+}
 
 } // end namespace point_cloud_colorizer

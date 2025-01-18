@@ -298,7 +298,7 @@ Visualization Manager:
       Value: false
     - Class: rviz/Image
       Enabled: true
-      Image Topic: /usb_cam/image_raw
+      Image Topic: /img_w_lidar_scan
       Max Value: 1
       Median window: 5
       Min Value: 0
@@ -336,7 +336,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 36.111942291259766
+      Distance: 33.585693359375
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1

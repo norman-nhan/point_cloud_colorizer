@@ -1,5 +1,4 @@
 common:
-    # lid_topic:  "/velodyne_points"
     lid_topic: "/color_cloud"
     imu_topic:  "/imu/data"
     time_sync_en: false         # ONLY turn on when external time synchronization is really not possible
@@ -22,9 +21,9 @@ mapping:
     det_range:     100.0
     extrinsic_est_en:  false      # true: enable the online estimation of IMU-LiDAR extrinsic,
     # The extrinsic parameters in FAST-LIO is defined as the LiDAR's pose (position and rotation matrix) in IMU body frame (i.e. the IMU is the base frame).
-    extrinsic_T: [ 0,-0.07, 0]    # the LiDAR is 7cm to the right of IMU 
-    extrinsic_R: [-1, 0, 0,       # the LiDAR's x-axis is opposite of IMU's x-axis
-                   0,-1, 0, 
+    extrinsic_T: [ 0,-0.07, 0]    # LiDAR is 7cm far from IMU in opposite direction of IMU's y-axis
+    extrinsic_R: [-1, 0, 0,       # Rotate 180 around IMU's y-axis to get LiDAR's pose
+                   0, 1, 0, 
                    0, 0, 1]
 
 publish:
