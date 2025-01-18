@@ -6,7 +6,6 @@
 #include <message_filters/subscriber.h>
 #include <message_filters/synchronizer.h>
 #include <message_filters/sync_policies/approximate_time.h>
-#include <image_transport/image_transport.h>
 // OpenCV
 #include <cv_bridge/cv_bridge.h>
 #include <opencv2/opencv.hpp>
@@ -21,6 +20,10 @@
 #include <cmath>
 // custom pcl point type
 #include "color_cloud.h"
+
+typedef color_cloud::Point PointType;
+typedef message_filters::sync_policies::ApproximateTime<sensor_msgs::Image, sensor_msgs::PointCloud2> MySyncPolicy;
+typedef message_filters::Synchronizer<MySyncPolicy> Sync;
 
 ////////////////////////////
 // Declare new pcl PointT //
@@ -59,47 +62,37 @@ namespace point_cloud_colorizer {
 class PointCloudColorizer
 {
 private:
-    // ROS
+    // ROS stuffs
     ros::NodeHandle& nh_;
+
     ros::Publisher color_cloud_pub_;
+
     message_filters::Subscriber<sensor_msgs::Image> img_sub_;
     message_filters::Subscriber<sensor_msgs::PointCloud2> pc_sub_;
-    typedef message_filters::sync_policies::ApproximateTime<sensor_msgs::Image, sensor_msgs::PointCloud2> MySyncPolicy;
-    typedef message_filters::Synchronizer<MySyncPolicy> Sync;
-    boost::shared_ptr<Sync> sync_;
-    image_transport::ImageTransport it_;
-    image_transport::Publisher img_pub_;
-    sensor_msgs::PointCloud2 cloud_out_;
 
-    // Parameters
-    std::string img_topic_;
+    boost::shared_ptr<Sync> sync_;
+
+    // YAML file params
+    std::string image_topic_;
     std::string pc_topic_;
     std::string color_cloud_topic_;
+
     float offset_x_;    
     float offset_y_;
     float offset_z_;
+    
     float hFOV_; 
     float vFOV_;
-    int img_h_;
-    int img_w_;
-
-    // PCL
-    typedef color_cloud::Point PointType;
-    pcl::PointCloud<PointType> pl_color_;
-
-    // OpenCV
-    // cv::Mat current_img_;
-    cv::Mat img_out_;
-    cv_bridge::CvImage cv_img_;
+    
+    int H_;
+    int W_;
 
 public:
     PointCloudColorizer(ros::NodeHandle& nh);
     ~PointCloudColorizer();
 
 private:
-    void synchronizer(const sensor_msgs::Image::ConstPtr& img_msg, const sensor_msgs::PointCloud2::ConstPtr& pc_msg);
-    // void img_cbk(const sensor_msgs::Image::ConstPtr& msg); 
-    // void pc_cbk(const sensor_msgs::PointCloud2::ConstPtr& msg);
+    void image_lidar_cbk(const sensor_msgs::Image::ConstPtr& img_msg, const sensor_msgs::PointCloud2::ConstPtr& pc_msg);
     void colorize(const sensor_msgs::PointCloud2::ConstPtr& msg, const cv::Mat input_img);
 };
 } // end namespace point_cloud_colorizer

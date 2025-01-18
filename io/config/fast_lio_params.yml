@@ -1,5 +1,4 @@
 common:
-    # lid_topic:  "/velodyne_points"
     lid_topic: "/color_cloud"
     imu_topic:  "/imu/data"
     time_sync_en: false         # ONLY turn on when external time synchronization is really not possible
@@ -21,10 +20,18 @@ mapping:
     fov_degree:    180
     det_range:     100.0
     extrinsic_est_en:  false      # true: enable the online estimation of IMU-LiDAR extrinsic,
-    extrinsic_T: [ 0,-0.07, 0]    # the LiDAR is 7cm to the right of IMU 
-    extrinsic_R: [-1, 0, 0,       # the LiDAR's x-axis is opposite of IMU's x-axis
-                   0,-1, 0, 
+    extrinsic_T: [ 0,-0.07, 0]    # LiDAR frame is 7cm far from IMU in the opposite of y-axis
+    extrinsic_R: [-1, 0, 0,       # rotate 180 degree around IMU's y-axis to get LiDAR'pose
+                   0, 1, 0, 
                    0, 0, 1]
+    specified_for_velodyne:
+        feature_extract_enable: 0
+        point_filter_num: 4
+        max_iteration: 3
+        filter_size_surf: 0.5
+        filter_size_map: 0.5
+        cube_side_length: 1000
+        runtime_pos_log_enable: 0
 
 publish:
     path_en:  false
