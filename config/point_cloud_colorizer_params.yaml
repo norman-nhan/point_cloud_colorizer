@@ -1,0 +1,16 @@
+point_cloud_colorizer_node:
+  ros_parameters:
+    topics:
+      img_topic: /usb_cam/image_raw
+      pc_topic: /velodyne_points
+    camera:
+      translation:
+        t_x: 0.0
+        t_y: 0.0
+        t_z: 0.0
+      fov:
+        vFOV: 0.516
+        hFOV: 0.734
+      bounds:
+        W: 640
+        H: 480
