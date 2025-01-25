@@ -6,11 +6,11 @@ PointCloudColorizer::PointCloudColorizer()
     // Declare parameters
     this->declare_parameter<std::string>("img_topic", "/usb_cam/image_raw");
     this->declare_parameter<std::string>("pc_topic", "/velodyne_points");
-    this->declare_parameter<float>("t_x", 0.0);
-    this->declare_parameter<float>("t_y", 0.0);
-    this->declare_parameter<float>("t_z", 0.0);
-    this->declare_parameter<float>("vFOV", 0.516);
-    this->declare_parameter<float>("hFOV", 0.734);
+    this->declare_parameter<float>("t_x", 0.01);
+    this->declare_parameter<float>("t_y", -0.0001);
+    this->declare_parameter<float>("t_z", 0.05);
+    this->declare_parameter<float>("vFOV", 0.558);
+    this->declare_parameter<float>("hFOV", 0.744);
     this->declare_parameter<int>("W", 640);
     this->declare_parameter<int>("H", 480);
 
