@@ -1,8 +1,32 @@
-#ifndef COLOR_CLOUD_H
-#define COLOR_CLOUD_H
+#define PCL_NO_PRECOMPILE
+#pragma once
 
 #include <pcl_conversions/pcl_conversions.h>
-// #include <pcl/point_types.h>
+
+namespace velodyne_ros {
+struct EIGEN_ALIGN16 Point { 
+    PCL_ADD_POINT4D;
+    union 
+    {
+        struct 
+        {
+            float intensity;
+            std::uint16_t ring;
+            float time;
+        };
+    };
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW; 
+};
+}// namespace velodyne_ros
+
+POINT_CLOUD_REGISTER_POINT_STRUCT(velodyne_ros::Point,
+    (float, x, x)         
+    (float, y, y)         
+    (float, z, z)         
+    (float, intensity, intensity)  
+    (std::uint16_t, ring, ring)             
+    (float, time, time)            
+)
 
 namespace color_cloud {
   struct EIGEN_ALIGN16 Point{
@@ -45,4 +69,3 @@ POINT_CLOUD_REGISTER_POINT_STRUCT(color_cloud::PointNormal,
   (float, curvature, curvature)
   (float, rgba, rgba)
 )
-#endif // COLOR_CLOUD_H
