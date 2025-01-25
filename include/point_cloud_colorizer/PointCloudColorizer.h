@@ -52,8 +52,8 @@ private:
     cv_bridge::CvImage cv_img_;
 
     // Dynamic recongigure
-    dynamic_reconfigure::Server<CameraParamSliderConfig> dr_server_;
-    dynamic_reconfigure::Server<CameraParamSliderConfig>::CallbackType dr_callback_;
+    // dynamic_reconfigure::Server<CameraParamSliderConfig> dr_server_;
+    // dynamic_reconfigure::Server<CameraParamSliderConfig>::CallbackType dr_callback_;
 
 public:
     PointCloudColorizer(ros::NodeHandle& nh);
@@ -62,6 +62,6 @@ public:
 private:
     void sync_cbk(const sensor_msgs::Image::ConstPtr& img_msg, const sensor_msgs::PointCloud2::ConstPtr& pc_msg);
     void colorize(const sensor_msgs::PointCloud2::ConstPtr& msg, const cv::Mat input_img);
-    void dr_cbk(CameraParamSliderConfig &config, uint32_t level);
+    // void dr_cbk(CameraParamSliderConfig &config, uint32_t level);
 };
 } // end namespace point_cloud_colorizer
