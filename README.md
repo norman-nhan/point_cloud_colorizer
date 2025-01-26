@@ -19,6 +19,28 @@ rosdep install -iry --from-paths src --ignore-src
 catkin build
 source devel/setup.bash
 ```
+# Parameters setting
+This package depends on two main parameters:
+1. Pose of camera in refers to lidar frame (no support orientation).
+2. Camera field of view (fov)
+
+You can set these parameters in `io/config/point_cloud_colorizer_params.yml`. The file looks like this:
+```
+input_topic:
+  img_topic: usb_cam/image_rect_color
+  pc_topic: velodyne_points
+camera:
+  pose: # position of camera refers to the lidar frame
+    t_x: 0.01
+    t_y: -0.0001
+    t_z: 0.05
+  fov:
+    vFOV: 0.558
+    hFOV: 0.744
+  image_bounds:
+    W: 640
+    H: 480
+```
 # Launch
 ```
 roslaunch point_cloud_colorizer point_cloud_colorizer.launch
