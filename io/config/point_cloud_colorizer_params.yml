@@ -1,10 +1,11 @@
 input_topic:
-  img_topic: usb_cam/image_rect_color
+  img_topic: usb_cam/image_raw
+  # img_topic: usb_cam/image_rect_color
   pc_topic: velodyne_points
 camera:
   pose: # position of camera refers to the lidar frame
     t_x: 0.01
-    t_y: 0.03 # prev: -0.0001
+    t_y: 0.01 # prev: -0.0001
     t_z: 0.05
   fov:
     vFOV: 0.558
