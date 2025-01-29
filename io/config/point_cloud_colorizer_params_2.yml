@@ -1,0 +1,14 @@
+input_topic:
+  img_topic: usb_cam/image_raw
+  pc_topic: velodyne_points
+camera:
+  pose: # position of camera refers to the lidar frame
+    t_x: -0.09
+    t_y: -0.03
+    t_z: 0.02
+  fov:
+    vFOV: 0.516
+    hFOV: 0.734
+  image_bounds:
+    W: 640
+    H: 480
