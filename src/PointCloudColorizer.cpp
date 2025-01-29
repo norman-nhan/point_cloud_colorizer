@@ -21,8 +21,8 @@ PointCloudColorizer::PointCloudColorizer(ros::NodeHandle& nh) : nh_(nh), it_(nh_
     img_sub_.subscribe(nh_, img_topic_, 1); // input_image
     pc_sub_.subscribe(nh_, pc_topic_, 1);   // input_cloud
 
-    // Synchronize topics using ApproximateTime policy, queue size 10
-    sync_.reset(new Sync(MySyncPolicy(10000), img_sub_, pc_sub_));
+    // img_sub_.registerCallback(&PointCloudColorizer::image_cbk, this); // Store images in buffer
+    sync_.reset(new Sync(MySyncPolicy(10), img_sub_, pc_sub_));
     sync_->registerCallback(boost::bind(&PointCloudColorizer::sync_cbk, this, _1, _2));
 
     // Publishers
@@ -123,6 +123,93 @@ void PointCloudColorizer::sync_cbk(const sensor_msgs::Image::ConstPtr& img_msg, 
         ROS_ERROR("cv_bridge exception: %s", e.what());
     }
 }
+
+// void PointCloudColorizer::image_cbk(const sensor_msgs::Image::ConstPtr& img_msg) {
+//     std::lock_guard<std::mutex> lock(img_mutex_);
+//     try {
+//         cv_bridge::CvImagePtr cv_ptr = cv_bridge::toCvCopy(img_msg, "bgr8");
+//         latest_image_ = cv_ptr->image.clone();
+//         latest_image_time_ = img_msg->header.stamp;
+//         has_new_image_ = true;  // Mark that a new image is available
+//     }
+//     catch (cv_bridge::Exception& e) {
+//         ROS_ERROR("cv_bridge exception: %s", e.what());
+//     }
+// }
+
+// void PointCloudColorizer::sync_cbk(const sensor_msgs::Image::ConstPtr& img_msg,
+//                                    const sensor_msgs::PointCloud2::ConstPtr& pc_msg) {
+//     std::lock_guard<std::mutex> lock(img_mutex_);
+
+//     if (!has_new_image_) {
+//         ROS_WARN_THROTTLE(1.0, "No new image available, skipping colorization...");
+//         return;
+//     }
+
+//     // Ensure we are using the latest image
+//     if (latest_image_time_ < pc_msg->header.stamp) {
+//         ROS_WARN_THROTTLE(1.0, "Point cloud timestamp is newer than image, skipping...");
+//         return;
+//     }
+
+//     // Process point cloud using the latest image
+//     colorize(pc_msg, latest_image_);
+//     has_new_image_ = false;  // Reset the flag so we don't reuse the same image again
+// }
+
+// void PointCloudColorizer::image_cbk(const sensor_msgs::Image::ConstPtr& img_msg) {
+//     std::lock_guard<std::mutex> lock(img_mutex_);
+//     try {
+//         cv_bridge::CvImagePtr cv_ptr = cv_bridge::toCvCopy(img_msg, "bgr8");
+//         image_buffer_.emplace_back(img_msg->header.stamp, cv_ptr->image.clone());
+
+//         // Limit buffer size to avoid memory issues
+//         if (image_buffer_.size() > 20) {
+//             image_buffer_.pop_front(); // Remove oldest image
+//         }
+//     }
+//     catch (cv_bridge::Exception& e) {
+//         ROS_ERROR("cv_bridge exception: %s", e.what());
+//     }
+// }
+
+
+// void PointCloudColorizer::sync_cbk(const sensor_msgs::Image::ConstPtr& img_msg, const sensor_msgs::PointCloud2::ConstPtr& pc_msg) 
+// {
+//     std::lock_guard<std::mutex> lock(img_mutex_);
+
+//     if (image_buffer_.empty()) {
+//         ROS_WARN_THROTTLE(1.0, "Image buffer is empty, skipping colorization...");
+//         return;
+//     }
+
+//     // Find the closest image by timestamp
+//     cv::Mat matched_image;
+//     ros::Time pc_time = pc_msg->header.stamp;
+//     double min_time_diff = std::numeric_limits<double>::max();
+
+//     for (auto it = image_buffer_.begin(); it != image_buffer_.end(); ++it) {
+//         double time_diff = fabs((it->first - pc_time).toSec());
+//         if (time_diff < min_time_diff && time_diff < max_time_diff_.toSec()) {
+//             min_time_diff = time_diff;
+//             matched_image = it->second;
+//         }
+//     }
+
+//     if (matched_image.empty()) {
+//         ROS_WARN_THROTTLE(1.0, "No suitable image found, skipping colorization...");
+//         return;
+//     }
+
+//     // Remove old images from buffer (keep only recent ones)
+//     while (!image_buffer_.empty() && image_buffer_.front().first < pc_time - max_time_diff_) {
+//         image_buffer_.pop_front();
+//     }
+
+//     // Process the point cloud using the matched image
+//     ROS_INFO_STREAM("PC Time: " << pc_time << " | Matched Image Time: " << image_buffer_.back().first);
+//     colorize(pc_msg, matched_image);
+// }
 
 // void PointCloudColorizer::dr_cbk(CameraParamSliderConfig &config, uint32_t level) {
 //     t_x_ = config.t_x;

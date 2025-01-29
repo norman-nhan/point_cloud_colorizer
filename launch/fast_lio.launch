@@ -2,8 +2,11 @@
   <!-- Launch file for velodyne16 VLP-16 LiDAR -->
 
     <arg name="rviz" default="true" />
-    
-    <!-- Replace this params file with your setup file for fast lio 2 -->
+    <arg name="pub_body_to_imu" default="true"/>
+
+    <!-- Pub tf from body to imu frame -->
+    <node name="static_tf_body_to_imu" pkg="tf2_ros" type="static_transform_publisher" args="0 0 0 0 0 0 body imu_link" output="screen"/>
+
     <rosparam command="load" file="$(find point_cloud_colorizer)/io/config/fast_lio_params.yml" />
 
     <param name="feature_extract_enable" type="bool" value="0"/>

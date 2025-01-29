@@ -25,6 +25,9 @@
 #include <dynamic_reconfigure/server.h>
 #include "point_cloud_colorizer/CameraParamSliderConfig.h"
 
+#include <deque>
+#include <mutex>
+
 typedef message_filters::sync_policies::ApproximateTime<sensor_msgs::Image, sensor_msgs::PointCloud2> MySyncPolicy;
 typedef message_filters::Synchronizer<MySyncPolicy> Sync;
 
@@ -55,11 +58,21 @@ private:
     dynamic_reconfigure::Server<CameraParamSliderConfig> dr_server_;
     dynamic_reconfigure::Server<CameraParamSliderConfig>::CallbackType dr_callback_;
 
+    // std::deque<std::pair<ros::Time, cv::Mat>> image_buffer_;
+    // std::mutex img_mutex_;
+    // ros::Duration max_time_diff_ = ros::Duration(0.05); // Max allowable time difference (50ms)
+
+    // cv::Mat latest_image_;
+    // ros::Time latest_image_time_;
+    // bool has_new_image_ = false;
+    // std::mutex img_mutex_; // To avoid race conditions
+
 public:
     PointCloudColorizer(ros::NodeHandle& nh);
     ~PointCloudColorizer();
 
 private:
+    void image_cbk(const sensor_msgs::Image::ConstPtr& img_msg);
     void sync_cbk(const sensor_msgs::Image::ConstPtr& img_msg, const sensor_msgs::PointCloud2::ConstPtr& pc_msg);
     void colorize(const sensor_msgs::PointCloud2::ConstPtr& msg, const cv::Mat input_img);
     void dr_cbk(CameraParamSliderConfig &config, uint32_t level);

@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <launch>
+    <arg name="pub_map_to_velodyne" default="true"/>
     <arg name="rviz_file" default="$(find point_cloud_colorizer)/io/rviz/default.rviz"/>
 
     <!-- camera -->
@@ -17,4 +18,6 @@
     <!-- <node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(find point_cloud_colorizer)/io/rviz/camera_calibration.rviz"/> -->
     <node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(arg rviz_file)"/>
 
+    <!-- TF to center point cloud -->
+    <node if="$(arg pub_map_to_velodyne)" name="map_to_velodyne" pkg="tf2_ros" type="static_transform_publisher" args="-5 0 0 0 0 0 map velodyne" output="screen"/>    
 </launch>
