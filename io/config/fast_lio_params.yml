@@ -19,10 +19,10 @@ mapping:
     b_gyr_cov: 0.0001
     fov_degree:    180
     det_range:     100.0
-    extrinsic_est_en:  false      # true: enable the online estimation of IMU-LiDAR extrinsic,
+    extrinsic_est_en:  true      # true: enable the online estimation of IMU-LiDAR extrinsic,
     # The extrinsic parameters in FAST-LIO is defined as the LiDAR's pose (position and rotation matrix) in IMU body frame (i.e. the IMU is the base frame).
-    extrinsic_T: [ 0,-0.07, 0]    # LiDAR is 7cm far from IMU in opposite direction of IMU's y-axis
-    extrinsic_R: [1, 0, 0,       # Rotate 180 around IMU's y-axis to get LiDAR's pose
+    extrinsic_T: [ 0,-0.07, 0.05]
+    extrinsic_R: [1, 0, 0,       
                    0, 1, 0, 
                    0, 0, 1]
 

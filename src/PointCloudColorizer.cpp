@@ -1,5 +1,5 @@
 #include "point_cloud_colorizer/PointCloudColorizer.h"
-#define IMAGE_BOUNDS_OFFSET 2*2*2*2
+#define IMAGE_BOUNDS_OFFSET 50
 
 namespace point_cloud_colorizer {
 
@@ -10,7 +10,7 @@ PointCloudColorizer::PointCloudColorizer(ros::NodeHandle& nh) : nh_(nh), it_(nh_
     private_nh.param<std::string>("input_topic/img_topic", img_topic_, "usb_cam/image_rect_color");
     private_nh.param<std::string>("input_topic/pc_topic", pc_topic_, "velodyne_points");
     private_nh.param<float>("camera/pose/t_x", t_x_, 0.01);
-    private_nh.param<float>("camera/pose/t_y", t_y_, -0.0001);
+    private_nh.param<float>("camera/pose/t_y", t_y_, 0.01);
     private_nh.param<float>("camera/pose/t_z", t_z_, 0.05); // 0.01 or 0.05 both are good
     private_nh.param<float>("camera/fov/vFOV", vFOV_, 0.558);  // prev_value: 0.516
     private_nh.param<float>("camera/fov/hFOV", hFOV_, 0.744);  // prev_value: 0.734
@@ -22,7 +22,7 @@ PointCloudColorizer::PointCloudColorizer(ros::NodeHandle& nh) : nh_(nh), it_(nh_
     pc_sub_.subscribe(nh_, pc_topic_, 1);   // input_cloud
 
     // Synchronize topics using ApproximateTime policy, queue size 10
-    sync_.reset(new Sync(MySyncPolicy(10), img_sub_, pc_sub_));
+    sync_.reset(new Sync(MySyncPolicy(10000), img_sub_, pc_sub_));
     sync_->registerCallback(boost::bind(&PointCloudColorizer::sync_cbk, this, _1, _2));
 
     // Publishers
