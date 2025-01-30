@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
     <arg name="pub_map_to_velodyne" default="true"/>
-    <arg name="rviz_file" default="$(find point_cloud_colorizer)/io/rviz/default.rviz"/>
+    <arg name="rviz_file" default="$(find point_cloud_colorizer)/io/rviz/velodyne.rviz"/>
 
     <!-- camera -->
     <include file="$(find point_cloud_colorizer)/launch/webcam_node.launch"/>

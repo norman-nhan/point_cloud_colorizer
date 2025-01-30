@@ -21,12 +21,6 @@
 // C++ system
 #include <stdio.h>
 #include <cmath>
-// dynamic reconfigure
-#include <dynamic_reconfigure/server.h>
-#include "point_cloud_colorizer/CameraParamSliderConfig.h"
-
-#include <deque>
-#include <mutex>
 
 typedef message_filters::sync_policies::ApproximateTime<sensor_msgs::Image, sensor_msgs::PointCloud2> MySyncPolicy;
 typedef message_filters::Synchronizer<MySyncPolicy> Sync;
@@ -41,8 +35,6 @@ private:
     message_filters::Subscriber<sensor_msgs::Image> img_sub_;
     message_filters::Subscriber<sensor_msgs::PointCloud2> pc_sub_;
     boost::shared_ptr<Sync> sync_;
-    image_transport::ImageTransport it_;
-    image_transport::Publisher img_pub_;
 
     // Parameters
     std::string img_topic_;
@@ -51,26 +43,6 @@ private:
     float hFOV_, vFOV_; 
     int H_, W_;
 
-    // cv bridge
-    cv_bridge::CvImage cv_img_;
-
-    // Dynamic recongigure
-    dynamic_reconfigure::Server<CameraParamSliderConfig> dr_server_;
-    dynamic_reconfigure::Server<CameraParamSliderConfig>::CallbackType dr_callback_;
-
-    // std::deque<std::pair<ros::Time, cv::Mat>> image_buffer_;
-    // std::mutex img_mutex_;
-    // ros::Duration max_time_diff_ = ros::Duration(0.05); // Max allowable time difference (50ms)
-
-    // cv::Mat latest_image_;
-    // ros::Time latest_image_time_;
-    // bool has_new_image_ = false;
-    // std::mutex img_mutex_; // To avoid race conditions
-
-    // Evaluation
-    double p1_x_, p1_y_, p1_z_, p2_x_, p2_y_, p2_z_, threshold_;
-    int eval_size_;
-
 public:
     PointCloudColorizer(ros::NodeHandle& nh);
     ~PointCloudColorizer();
@@ -78,9 +50,5 @@ public:
 private:
     void sync_cbk(const sensor_msgs::Image::ConstPtr& img_msg, const sensor_msgs::PointCloud2::ConstPtr& pc_msg);
     void colorize(const sensor_msgs::PointCloud2::ConstPtr& msg, const cv::Mat input_img);
-    void dr_cbk(CameraParamSliderConfig &config, uint32_t level);
-    void image_cbk(const sensor_msgs::Image::ConstPtr& img_msg);
-    void calRGBVariance(pcl::PointCloud<color_cloud::Point>& eval_set);
-    // void calRGBVariance(std::set<color_cloud::Point>& eval_set);
 };
 } // end namespace point_cloud_colorizer
