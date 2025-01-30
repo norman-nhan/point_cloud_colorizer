@@ -16,6 +16,15 @@ PointCloudColorizer::PointCloudColorizer(ros::NodeHandle& nh) : nh_(nh), it_(nh_
     private_nh.param<float>("camera/fov/hFOV", hFOV_, 0.744);  // prev_value: 0.734
     private_nh.param<int>("camera/image_bounds/W", W_, 640);
     private_nh.param<int>("camera/image_bounds/H", H_, 480);
+    private_nh.param<int>("camera/image_bounds/H", H_, 480);
+    // 4evaluation
+    private_nh.param<double>("evaluation/point1/x", p1_x_, 1.0);
+    private_nh.param<double>("evaluation/point1/y", p1_y_, 1.0);
+    private_nh.param<double>("evaluation/point1/z", p1_z_, 1.0);
+    private_nh.param<double>("evaluation/point2/x", p2_x_, 1.0);
+    private_nh.param<double>("evaluation/point2/y", p2_y_, 1.0);
+    private_nh.param<double>("evaluation/point2/z", p2_z_, 1.0);
+    private_nh.param<double>("evaluation/threshold", threshold_, 1.0);
 
     // Subscribers
     img_sub_.subscribe(nh_, img_topic_, 1); // input_image
@@ -49,6 +58,13 @@ void PointCloudColorizer::colorize(const sensor_msgs::PointCloud2::ConstPtr& pc_
     pcl::PointCloud<color_cloud::Point> pl_color;
     pl_color.points.resize(pl_orig.points.size());
 
+    // Eigen::Vector3f p1(p1_x_, p1_y_, p1_z_);
+    // Eigen::Vector3f p2(p2_x_, p2_y_, p2_z_);
+    // std::set<int> ring_ids;
+    // ROS_INFO("threshold: %f", threshold_);
+    pcl::PointCloud<color_cloud::Point> eval_set;
+    eval_set.clear();
+
     // copy image to img_out
     cv::Mat img_out = input_img.clone();
 
@@ -60,7 +76,13 @@ void PointCloudColorizer::colorize(const sensor_msgs::PointCloud2::ConstPtr& pc_
         pl_color.points[i].intensity = pl_orig.points[i].intensity;    // reflection intensity
         pl_color.points[i].ring = pl_orig.points[i].ring;  // ring number (VLP16 has ring number up to 16)
         pl_color.points[i].time = pl_orig.points[i].time;  // time laser beam was shot
-        
+
+        // Eigen::Vector3f p(pl_color.points[i].x, pl_color.points[i].y, pl_color.points[i].z);
+        // if ((p - p1).norm() < threshold_ || (p - p2).norm() < threshold_) {
+        //     ROS_INFO("(p-p1).norm: %f", (p-p1).norm());
+        //     ring_ids.insert(pl_color.points[i].ring);
+        // }
+
         // transform from lidar's frame to camera's frame
         float xC = pl_color.points[i].x - t_x_;
         float yC = pl_color.points[i].y - t_y_;
@@ -80,11 +102,32 @@ void PointCloudColorizer::colorize(const sensor_msgs::PointCloud2::ConstPtr& pc_
                 && yI < H_ - IMAGE_BOUNDS_OFFSET 
                 && xI >= 0 + IMAGE_BOUNDS_OFFSET
                 && xI < W_ - IMAGE_BOUNDS_OFFSET) {
+                color_cloud::Point eval_point = pl_color.points[i];
                 cv::Vec3b color = input_img.at<cv::Vec3b>(yI, xI);
                 pl_color.points[i].r = color[2];
                 pl_color.points[i].g = color[1];
                 pl_color.points[i].b = color[0];
                 pl_color.points[i].a = 255;
+
+                // Evaluation
+                float dist_offset = 0.05;
+                if (eval_point.ring == 10
+                    && eval_point.y >= p2_y_ 
+                    && eval_point.y <= p1_y_
+                    && fabs(eval_point.x - p1_x_) <= dist_offset) 
+                {
+                    pl_color.points[i].r = 255;
+                    pl_color.points[i].g = 0;
+                    pl_color.points[i].b = 0;
+                    pl_color.points[i].a = 255;
+                    eval_point.r = color[2];
+                    eval_point.g = color[1];
+                    eval_point.b = color[0];
+                    eval_point.a = 255;
+                    ROS_INFO("add eval_point (r: %d, g: %d, b: %d) to eval_set", eval_point.r, eval_point.g, eval_point.b);
+                    eval_set.push_back(eval_point);
+                }
+
                 // mark red point at colorized pixel
                 img_out.at<cv::Vec3b>(yI, xI) = cv::Vec3b(0, 0, 255);
             }
@@ -97,6 +140,14 @@ void PointCloudColorizer::colorize(const sensor_msgs::PointCloud2::ConstPtr& pc_
             pl_color.points[i].a = 0;
         }
     }
+    calRGBVariance(eval_set);
+
+    // Print the found ring IDs
+    // for (int ring : ring_ids) {
+    //     ROS_INFO("Ring ID found: %d", ring);
+    //     std::cout << ring << std::endl;
+    // }
+
     // Publish color cloud
     sensor_msgs::PointCloud2 ros_cloud;
     pcl::toROSMsg(pl_color, ros_cloud);
@@ -112,104 +163,51 @@ void PointCloudColorizer::colorize(const sensor_msgs::PointCloud2::ConstPtr& pc_
     img_pub_.publish(cv_img_.toImageMsg());
 }
 
+void PointCloudColorizer::calRGBVariance(pcl::PointCloud<color_cloud::Point>& eval_set)
+{
+    if (eval_set.empty()) {
+        ROS_INFO("eval_set INVALID OR EMPTY");
+        return;
+    }
+    ROS_INFO("eval_set.size(): %ld", eval_set.size());
+    ROS_INFO("eval_size_: %d", eval_size_);
+
+    Eigen::Vector3f mean = Eigen::Vector3f::Zero();
+    Eigen::Vector3f variance = Eigen::Vector3f::Zero();
+
+    // Compute mean of r, g, b
+    for (const auto& point : eval_set.points) {
+        mean.x() += point.r;
+        mean.y() += point.g;
+        mean.z() += point.b;
+    }
+    mean /= static_cast<float>(eval_set.size());
+    ROS_INFO("mean of r: %f, mean of g: %f, mean of b: %f", mean.x(), mean.y(), mean.z());
+
+    // Compute variance of r, g, b
+    for (const auto& point : eval_set.points) {
+        variance.x() += (point.r - mean.x()) * (point.r - mean.x());
+        variance.y() += (point.g - mean.y()) * (point.g - mean.y());
+        variance.z() += (point.b - mean.z()) * (point.b - mean.z());
+    }
+    // Normalize the variance by dividing by the max possible variance (255^2 = 65025)
+    const float max_variance = 65025.0f; // Maximum possible variance (255^2)
+    variance /= (max_variance*static_cast<float>(eval_set.size()));
+    ROS_INFO("variance of r: %f, variance of g: %f, variance of b: %f", variance.x(), variance.y(), variance.z());
+}
+
+
 void PointCloudColorizer::sync_cbk(const sensor_msgs::Image::ConstPtr& img_msg, const sensor_msgs::PointCloud2::ConstPtr& pc_msg) 
 {
     // Convert ros msg to opencv
     try {
         cv_bridge::CvImagePtr cv_ptr = cv_bridge::toCvCopy(img_msg, "bgr8");
-        colorize(pc_msg, cv_ptr->image);
-    }
+            colorize(pc_msg, cv_ptr->image);
+        }
     catch (cv_bridge::Exception& e) {
         ROS_ERROR("cv_bridge exception: %s", e.what());
     }
 }
-
-// void PointCloudColorizer::image_cbk(const sensor_msgs::Image::ConstPtr& img_msg) {
-//     std::lock_guard<std::mutex> lock(img_mutex_);
-//     try {
-//         cv_bridge::CvImagePtr cv_ptr = cv_bridge::toCvCopy(img_msg, "bgr8");
-//         latest_image_ = cv_ptr->image.clone();
-//         latest_image_time_ = img_msg->header.stamp;
-//         has_new_image_ = true;  // Mark that a new image is available
-//     }
-//     catch (cv_bridge::Exception& e) {
-//         ROS_ERROR("cv_bridge exception: %s", e.what());
-//     }
-// }
-
-// void PointCloudColorizer::sync_cbk(const sensor_msgs::Image::ConstPtr& img_msg,
-//                                    const sensor_msgs::PointCloud2::ConstPtr& pc_msg) {
-//     std::lock_guard<std::mutex> lock(img_mutex_);
-
-//     if (!has_new_image_) {
-//         ROS_WARN_THROTTLE(1.0, "No new image available, skipping colorization...");
-//         return;
-//     }
-
-//     // Ensure we are using the latest image
-//     if (latest_image_time_ < pc_msg->header.stamp) {
-//         ROS_WARN_THROTTLE(1.0, "Point cloud timestamp is newer than image, skipping...");
-//         return;
-//     }
-
-//     // Process point cloud using the latest image
-//     colorize(pc_msg, latest_image_);
-//     has_new_image_ = false;  // Reset the flag so we don't reuse the same image again
-// }
-
-// void PointCloudColorizer::image_cbk(const sensor_msgs::Image::ConstPtr& img_msg) {
-//     std::lock_guard<std::mutex> lock(img_mutex_);
-//     try {
-//         cv_bridge::CvImagePtr cv_ptr = cv_bridge::toCvCopy(img_msg, "bgr8");
-//         image_buffer_.emplace_back(img_msg->header.stamp, cv_ptr->image.clone());
-
-//         // Limit buffer size to avoid memory issues
-//         if (image_buffer_.size() > 20) {
-//             image_buffer_.pop_front(); // Remove oldest image
-//         }
-//     }
-//     catch (cv_bridge::Exception& e) {
-//         ROS_ERROR("cv_bridge exception: %s", e.what());
-//     }
-// }
-
-
-// void PointCloudColorizer::sync_cbk(const sensor_msgs::Image::ConstPtr& img_msg, const sensor_msgs::PointCloud2::ConstPtr& pc_msg) 
-// {
-//     std::lock_guard<std::mutex> lock(img_mutex_);
-
-//     if (image_buffer_.empty()) {
-//         ROS_WARN_THROTTLE(1.0, "Image buffer is empty, skipping colorization...");
-//         return;
-//     }
-
-//     // Find the closest image by timestamp
-//     cv::Mat matched_image;
-//     ros::Time pc_time = pc_msg->header.stamp;
-//     double min_time_diff = std::numeric_limits<double>::max();
-
-//     for (auto it = image_buffer_.begin(); it != image_buffer_.end(); ++it) {
-//         double time_diff = fabs((it->first - pc_time).toSec());
-//         if (time_diff < min_time_diff && time_diff < max_time_diff_.toSec()) {
-//             min_time_diff = time_diff;
-//             matched_image = it->second;
-//         }
-//     }
-
-//     if (matched_image.empty()) {
-//         ROS_WARN_THROTTLE(1.0, "No suitable image found, skipping colorization...");
-//         return;
-//     }
-
-//     // Remove old images from buffer (keep only recent ones)
-//     while (!image_buffer_.empty() && image_buffer_.front().first < pc_time - max_time_diff_) {
-//         image_buffer_.pop_front();
-//     }
-
-//     // Process the point cloud using the matched image
-//     ROS_INFO_STREAM("PC Time: " << pc_time << " | Matched Image Time: " << image_buffer_.back().first);
-//     colorize(pc_msg, matched_image);
-// }
 
 // void PointCloudColorizer::dr_cbk(CameraParamSliderConfig &config, uint32_t level) {
 //     t_x_ = config.t_x;

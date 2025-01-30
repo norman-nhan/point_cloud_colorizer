@@ -12,6 +12,7 @@
     <!-- point cloud colorizer -->
     <node name="point_cloud_colorizer_node" pkg="point_cloud_colorizer" type="point_cloud_colorizer_node" output="screen">
         <rosparam file="$(find point_cloud_colorizer)/io/config/point_cloud_colorizer_params.yml"/>
+        <rosparam file="$(find point_cloud_colorizer)/io/config/points_4_evaluate.yml"/>
     </node>
     
     <!-- Rviz -->

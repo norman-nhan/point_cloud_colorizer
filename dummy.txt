@@ -1,0 +1,163 @@
+[0m[ INFO] [1738238093.199205188]: Initializing nodelet with 8 worker threads.[0m
+0.000 2.304 4.608 6.912 9.216 11.520 13.824 16.128 18.432 20.736 23.040 25.344 27.648 29.952 32.256 34.560 55.296 57.600 59.904 62.208 64.512 66.816 69.120 71.424 73.728 76.032 78.336 80.640 82.944 85.248 87.552 89.856 
+110.592 112.896 115.200 117.504 119.808 122.112 124.416 126.720 129.024 131.328 133.632 135.936 138.240 140.544 142.848 145.152 165.888 168.192 170.496 172.800 175.104 177.408 179.712 182.016 184.320 186.624 188.928 191.232 193.536 195.840 198.144 200.448 
+221.184 223.488 225.792 228.096 230.400 232.704 235.008 237.312 239.616 241.920 244.224 246.528 248.832 251.136 253.440 255.744 276.480 278.784 281.088 283.392 285.696 288.000 290.304 292.608 294.912 297.216 299.520 301.824 304.128 306.432 308.736 311.040 
+331.776 334.080 336.384 338.688 340.992 343.296 345.600 347.904 350.208 352.512 354.816 357.120 359.424 361.728 364.032 366.336 387.072 389.376 391.680 393.984 396.288 398.592 400.896 403.200 405.504 407.808 410.112 412.416 414.720 417.024 419.328 421.632 
+442.368 444.672 446.976 449.280 451.584 453.888 456.192 458.496 460.800 463.104 465.408 467.712 470.016 472.320 474.624 476.928 497.664 499.968 502.272 504.576 506.880 509.184 511.488 513.792 516.096 518.400 520.704 523.008 525.312 527.616 529.920 532.224 
+552.960 555.264 557.568 559.872 562.176 564.480 566.784 569.088 571.392 573.696 576.000 578.304 580.608 582.912 585.216 587.520 608.256 610.560 612.864 615.168 617.472 619.776 622.080 624.384 626.688 628.992 631.296 633.600 635.904 638.208 640.512 642.816 
+663.552 665.856 668.160 670.464 672.768 675.072 677.376 679.680 681.984 684.288 686.592 688.896 691.200 693.504 695.808 698.112 718.848 721.152 723.456 725.760 728.064 730.368 732.672 734.976 737.280 739.584 741.888 744.192 746.496 748.800 751.104 753.408 
+774.144 776.448 778.752 781.056 783.360 785.664 787.968 790.272 792.576 794.880 797.184 799.488 801.792 804.096 806.400 808.704 829.440 831.744 834.048 836.352 838.656 840.960 843.264 845.568 847.872 850.176 852.480 854.784 857.088 859.392 861.696 864.000 
+884.736 887.040 889.344 891.648 893.952 896.256 898.560 900.864 903.168 905.472 907.776 910.080 912.384 914.688 916.992 919.296 940.032 942.336 944.640 946.944 949.248 951.552 953.856 956.160 958.464 960.768 963.072 965.376 967.680 969.984 972.288 974.592 
+995.328 997.632 999.936 1002.240 1004.544 1006.848 1009.152 1011.456 1013.760 1016.064 1018.368 1020.672 1022.976 1025.280 1027.584 1029.888 1050.624 1052.928 1055.232 1057.536 1059.840 1062.144 1064.448 1066.752 1069.056 1071.360 1073.664 1075.968 1078.272 1080.576 1082.880 1085.184 
+1105.920 1108.224 1110.528 1112.832 1115.136 1117.440 1119.744 1122.048 1124.352 1126.656 1128.960 1131.264 1133.568 1135.872 1138.176 1140.480 1161.216 1163.520 1165.824 1168.128 1170.432 1172.736 1175.040 1177.344 1179.648 1181.952 1184.256 1186.560 1188.864 1191.168 1193.472 1195.776 
+1216.512 1218.816 1221.120 1223.424 1225.728 1228.032 1230.336 1232.640 1234.944 1237.248 1239.552 1241.856 1244.160 1246.464 1248.768 1251.072 1271.808 1274.112 1276.416 1278.720 1281.024 1283.328 1285.632 1287.936 1290.240 1292.544 1294.848 1297.152 1299.456 1301.760 1304.064 1306.368 
+[0m[ INFO] [1738238093.208417921]: correction angles: /home/lemonsawa/catkin_ws/src/velodyne/velodyne_pointcloud/params/VLP16db.yaml[0m
+[0m[ INFO] [1738238093.209622515]: laser_ring[ 0] =  0, angle = -0.261799[0m
+[0m[ INFO] [1738238093.209630810]: laser_ring[ 2] =  1, angle = -0.226893[0m
+[0m[ INFO] [1738238093.209634905]: laser_ring[ 4] =  2, angle = -0.191986[0m
+[0m[ INFO] [1738238093.209638801]: laser_ring[ 6] =  3, angle = -0.157080[0m
+[0m[ INFO] [1738238093.209642672]: laser_ring[ 8] =  4, angle = -0.122173[0m
+[0m[ INFO] [1738238093.209646447]: laser_ring[10] =  5, angle = -0.087266[0m
+[0m[ INFO] [1738238093.209650178]: laser_ring[12] =  6, angle = -0.052360[0m
+[0m[ INFO] [1738238093.209653772]: laser_ring[14] =  7, angle = -0.017453[0m
+[0m[ INFO] [1738238093.209657602]: laser_ring[ 1] =  8, angle = +0.017453[0m
+[0m[ INFO] [1738238093[0m[ INFO] [1738238093.220894472]: Spinning until killed publishing map to velodyne[0m
+.209661379]: laser_ring[ 3] =  9, angle = +0.052360[0m
+[0m[ INFO] [1738238093.209770874]: laser_ring[ 5] = 10, angle = +0.087266[0m
+[0m[ INFO] [1738238093.209777278]: laser_ring[ 7] = 11, angle = +0.122173[0m
+[0m[ INFO] [1738238093.209783026]: laser_ring[ 9] = 12, angle = +0.157080[0m
+[0m[ INFO] [1738238093.209788495]: laser_ring[11] = 13, angle = +0.191986[0m
+[0m[ INFO] [1738238093.209793682]: laser_ring[13] = 14, angle = +0.226893[0m
+[0m[ INFO] [1738238093.209798768]: laser_ring[15] = 15, angle = +0.261799[0m
+[0m[ INFO] [1738238093.209925744]: Number of lasers: 16.[0m
+[0m[ INFO] [1738238093.224840413]: Reconfigure request.[0m
+[0m[ INFO] [1738238093.224861827]: Target frame ID now: [0m
+[0m[ INFO] [1738238093.224870591]: Fixed frame ID now: [0m
+[0m[ INFO] [1738238093.224919261]: Initialized container with min_range: 0.4, max_range: 130, target_frame: , fixed_frame: , init_width: 0, init_height: 1, is_dense: 1, scans_per_packet: 384[0m
+[0m[ INFO] [1738238093.245088573]: Velodyne VLP-16 rotating at 600 RPM[0m
+[0m[ INFO] [1738238093.245321656]: publishing 76 packets per scan[0m
+[0m[ INFO] [1738238093.246981356]: Cut at specific angle feature deactivated.[0m
+[0m[ INFO] [1738238093.251046444]: Reconfigure Request[0m
+[0m[ INFO] [1738238093.251978377]: expected frequency: 9.921 (Hz)[0m
+[0m[ INFO] [1738238093.253873989]: Opening UDP socket: port 2368[0m
+[0m[ INFO] [1738238093.315847330]: rviz version 1.14.25[0m
+[0m[ INFO] [1738238093.315877064]: compiled against Qt version 5.12.8[0m
+[0m[ INFO] [1738238093.315884185]: compiled against OGRE version 1.9.0 (Ghadamon)[0m
+[0m[ INFO] [1738238093.324707021]: Forcing OpenGl version 0.[0m
+[0m[ INFO] [1738238093.459757865]: Stereo is NOT SUPPORTED[0m
+[0m[ INFO] [1738238093.459787643]: OpenGL device: Mesa Intel(R) Xe Graphics (TGL GT2)[0m
+[0m[ INFO] [1738238093.459800051]: OpenGl version: 4.6 (GLSL 4.6) limited to GLSL 1.4 on Mesa system.[0m
+... logging to /home/lemonsawa/.ros/log/040aabce-df01-11ef-aa65-595ec82b9ab3/roslaunch-nishidalab-154299.log
+Checking log directory for disk usage. This may take a while.
+Press Ctrl-C to interrupt
+]2;/home/lemonsawa/catkin_ws/src/point_cloud_colorizer/launch/point_cloud_colorizer.launch
+[1mstarted roslaunch server http://nishidalab:42227/[0m
+
+SUMMARY
+========
+
+PARAMETERS
+ * /point_cloud_colorizer_node/camera/fov/hFOV: 0.744
+ * /point_cloud_colorizer_node/camera/fov/vFOV: 0.558
+ * /point_cloud_colorizer_node/camera/image_bounds/H: 480
+ * /point_cloud_colorizer_node/camera/image_bounds/W: 640
+ * /point_cloud_colorizer_node/camera/pose/t_x: 0.01
+ * /point_cloud_colorizer_node/camera/pose/t_y: 0.01
+ * /point_cloud_colorizer_node/camera/pose/t_z: 0.05
+ * /point_cloud_colorizer_node/evaluation/point1/x: 4.921238899230957
+ * /point_cloud_colorizer_node/evaluation/point1/y: 1.291379690170288
+ * /point_cloud_colorizer_node/evaluation/point1/z: 0.4453279972076416
+ * /point_cloud_colorizer_node/evaluation/point2/x: 4.934418201446533
+ * /point_cloud_colorizer_node/evaluation/point2/y: 0.8897556662559509
+ * /point_cloud_colorizer_node/evaluation/point2/z: 0.4268406331539154
+ * /point_cloud_colorizer_node/evaluation/threshold: 0.05
+ * /point_cloud_colorizer_node/input_topic/img_topic: usb_cam/image_raw
+ * /point_cloud_colorizer_node/input_topic/pc_topic: velodyne_points
+ * /rosdistro: noetic
+ * /rosversion: 1.16.0
+ * /usb_cam/camera_frame_id: webcam
+ * /usb_cam/camera_info_url: package://point_c...
+ * /usb_cam/camera_name: webcam
+ * /usb_cam/camera_transport_suffix: image_raw
+ * /usb_cam/color_format: yuv422p
+ * /usb_cam/create_suspended: False
+ * /usb_cam/framerate: 30
+ * /usb_cam/full_ffmpeg_log: False
+ * /usb_cam/intrinsic_controls/exposure_auto: 3
+ * /usb_cam/intrinsic_controls/exposure_auto_priority: True
+ * /usb_cam/intrinsic_controls/focus_auto: True
+ * /usb_cam/intrinsic_controls/ignore: ['brightness', 'c...
+ * /usb_cam/intrinsic_controls/power_line_frequency: 1
+ * /usb_cam/intrinsic_controls/white_balance_temperature_auto: True
+ * /usb_cam/io_method: mmap
+ * /usb_cam/pixel_format: yuyv
+ * /usb_cam/start_service_name: start_capture
+ * /usb_cam/stop_service_name: stop_capture
+ * /usb_cam/video_device: /dev/video0
+ * /velodyne_nodelet_manager_driver/cut_angle: -0.01
+ * /velodyne_nodelet_manager_driver/device_ip: 
+ * /velodyne_nodelet_manager_driver/diagnostic_frequency_tolerance: 0.1
+ * /velodyne_nodelet_manager_driver/frame_id: velodyne
+ * /velodyne_nodelet_manager_driver/gps_time: False
+ * /velodyne_nodelet_manager_driver/model: VLP16
+ * /velodyne_nodelet_manager_driver/pcap: 
+ * /velodyne_nodelet_manager_driver/pcap_time: False
+ * /velodyne_nodelet_manager_driver/port: 2368
+ * /velodyne_nodelet_manager_driver/read_fast: False
+ * /velodyne_nodelet_manager_driver/read_once: False
+ * /velodyne_nodelet_manager_driver/repeat_delay: 0.0
+ * /velodyne_nodelet_manager_driver/rpm: 600.0
+ * /velodyne_nodelet_manager_driver/timestamp_first_packet: False
+ * /velodyne_nodelet_manager_laserscan/resolution: 0.007
+ * /velodyne_nodelet_manager_laserscan/ring: -1
+ * /velodyne_nodelet_manager_transform/calibration: /home/lemonsawa/c...
+ * /velodyne_nodelet_manager_transform/fixed_frame: 
+ * /velodyne_nodelet_manager_transform/max_range: 130.0
+ * /velodyne_nodelet_manager_transform/min_range: 0.4
+ * /velodyne_nodelet_manager_transform/model: VLP16
+ * /velodyne_nodelet_manager_transform/organize_cloud: False
+ * /velodyne_nodelet_manager_transform/target_frame: 
+
+NODES
+  /
+    map_to_velodyne (tf2_ros/static_transform_publisher)
+    point_cloud_colorizer_node (point_cloud_colorizer/point_cloud_colorizer_node)
+    rviz (rviz/rviz)
+    usb_cam (usb_cam/usb_cam_node)
+    velodyne_nodelet_manager (nodelet/nodelet)
+    velodyne_nodelet_manager_driver (nodelet/nodelet)
+    velodyne_nodelet_manager_laserscan (nodelet/nodelet)
+    velodyne_nodelet_manager_transform (nodelet/nodelet)
+  /usb_cam/
+    image_proc (image_proc/image_proc)
+
+auto-starting new master
+[1mprocess[master]: started with pid [154307][0m
+[1mROS_MASTER_URI=http://localhost:11311[0m
+]2;/home/lemonsawa/catkin_ws/src/point_cloud_colorizer/launch/point_cloud_colorizer.launch http://localhost:11311
+[1msetting /run_id to 040aabce-df01-11ef-aa65-595ec82b9ab3[0m
+[1mprocess[rosout-1]: started with pid [154318][0m
+started core service [/rosout]
+[1mprocess[usb_cam-2]: started with pid [154325][0m
+[1mprocess[usb_cam/image_proc-3]: started with pid [154326][0m
+[1mprocess[velodyne_nodelet_manager-4]: started with pid [154327][0m
+[1mprocess[velodyne_nodelet_manager_driver-5]: started with pid [154328][0m
+[1mprocess[velodyne_nodelet_manager_transform-6]: started with pid [154329][0m
+[1mprocess[velodyne_nodelet_manager_laserscan-7]: started with pid [154330][0m
+[1mprocess[point_cloud_colorizer_node-8]: started with pid [154339][0m
+[1mprocess[rviz-9]: started with pid [154344][0m
+[1mprocess[map_to_velodyne-10]: started with pid [154362][0m
+[map_to_velodyne-10] killing on exit
+[rviz-9] killing on exit
+[point_cloud_colorizer_node-8] killing on exit
+[velodyne_nodelet_manager_laserscan-7] killing on exit
+[velodyne_nodelet_manager_transform-6] killing on exit
+[velodyne_nodelet_manager_driver-5] killing on exit
+[velodyne_nodelet_manager-4] killing on exit
+[usb_cam/image_proc-3] killing on exit
+[usb_cam-2] killing on exit
+[rosout-1] killing on exit
+[master] killing on exit
+shutting down processing monitor...
+... shutting down processing monitor complete
+[1mdone[0m

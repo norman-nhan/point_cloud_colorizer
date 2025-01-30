@@ -67,14 +67,20 @@ private:
     // bool has_new_image_ = false;
     // std::mutex img_mutex_; // To avoid race conditions
 
+    // Evaluation
+    double p1_x_, p1_y_, p1_z_, p2_x_, p2_y_, p2_z_, threshold_;
+    int eval_size_;
+
 public:
     PointCloudColorizer(ros::NodeHandle& nh);
     ~PointCloudColorizer();
 
 private:
-    void image_cbk(const sensor_msgs::Image::ConstPtr& img_msg);
     void sync_cbk(const sensor_msgs::Image::ConstPtr& img_msg, const sensor_msgs::PointCloud2::ConstPtr& pc_msg);
     void colorize(const sensor_msgs::PointCloud2::ConstPtr& msg, const cv::Mat input_img);
     void dr_cbk(CameraParamSliderConfig &config, uint32_t level);
+    void image_cbk(const sensor_msgs::Image::ConstPtr& img_msg);
+    void calRGBVariance(pcl::PointCloud<color_cloud::Point>& eval_set);
+    // void calRGBVariance(std::set<color_cloud::Point>& eval_set);
 };
 } // end namespace point_cloud_colorizer
