@@ -116,6 +116,7 @@ void PointCloudColorizer::colorize(const sensor_msgs::PointCloud2::ConstPtr& pc_
                     && eval_point.y <= p1_y_
                     && fabs(eval_point.x - p1_x_) <= dist_offset) 
                 {
+                    // coloring red points used in eval_set
                     pl_color.points[i].r = 255;
                     pl_color.points[i].g = 0;
                     pl_color.points[i].b = 0;
