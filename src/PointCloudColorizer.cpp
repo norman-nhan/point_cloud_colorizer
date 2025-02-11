@@ -27,8 +27,7 @@ PointCloudColorizer::PointCloudColorizer(ros::NodeHandle& nh) : nh_(nh), it_(nh_
 
     // Publishers
     color_cloud_pub_ = nh_.advertise<sensor_msgs::PointCloud2>("color_cloud", 1);  // output_cloud
-    // Publisher for image contains lidar scan
-    img_pub_ = it_.advertise("image_lidar", 1);
+    img_pub_ = it_.advertise("image_lidar", 1); // lidar scan included
     
     // cvbridge initialization
     cv_img_.header.frame_id = "camera";
@@ -101,13 +100,13 @@ void PointCloudColorizer::colorize(const sensor_msgs::PointCloud2::ConstPtr& pc_
     sensor_msgs::PointCloud2 ros_cloud;
     pcl::toROSMsg(pl_color, ros_cloud);
     ros_cloud.header.frame_id = "velodyne";
-    ros_cloud.header.stamp = ros::Time::now();
+    ros_cloud.header.stamp = pc_msg->header.stamp;
     ros_cloud.is_bigendian = pc_msg->is_bigendian;
-    ros_cloud.is_dense = pc_msg->is_dense;
+    ros_cloud.is_dense     = pc_msg->is_dense;
     color_cloud_pub_.publish(ros_cloud);
     
     // publish img
-    cv_img_.header.stamp = ros::Time::now();
+    cv_img_.header.stamp = pc_msg->header.stamp;
     cv_img_.image = img_out;
     img_pub_.publish(cv_img_.toImageMsg());
 }

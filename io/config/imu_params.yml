@@ -4,7 +4,7 @@ baudrate     : 115200
 
 # This will cause the node to convert any NED measurements to ENU
 # This will also cause the node to convert any vehicle frame measurements to the ROS definition of a vehicle frame
-use_enu_frame : True
+use_enu_frame : False
 
 # The frame where imu/data will be published 
 frame_id: "imu_link"

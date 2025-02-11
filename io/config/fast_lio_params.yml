@@ -13,13 +13,13 @@ preprocess:
     blind: 2
 
 mapping:
-    acc_cov: 0.1
-    gyr_cov: 0.1
-    b_acc_cov: 0.0001
-    b_gyr_cov: 0.0001
-    fov_degree:    180
+    acc_cov: 0.01
+    gyr_cov: 0.01
+    b_acc_cov: 0.01
+    b_gyr_cov: 0.01
+    fov_degree:    360
     det_range:     100.0
-    extrinsic_est_en:  true      # true: enable the online estimation of IMU-LiDAR extrinsic,
+    extrinsic_est_en:  false      # true: enable the online estimation of IMU-LiDAR extrinsic,
     # The extrinsic parameters in FAST-LIO is defined as the LiDAR's pose (position and rotation matrix) in IMU body frame (i.e. the IMU is the base frame).
     extrinsic_T: [ 0,-0.07, 0.05]
     extrinsic_R: [1, 0, 0,       
@@ -27,7 +27,7 @@ mapping:
                    0, 0, 1]
 
 publish:
-    path_en:  false
+    path_en:  true
     scan_publish_en:  true       # false: close all the point cloud output
     dense_publish_en: true       # false: low down the points number in a global-frame point clouds scan.
     scan_bodyframe_pub_en: true  # true: output the point cloud scans in IMU-body-frame
